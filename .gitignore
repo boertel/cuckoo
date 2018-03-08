@@ -1,0 +1,8 @@
+.DS_Store
+.vasy
+.env
+__pycache__/
+.ropeproject/
+*.pyc
+*.egg-info
+
