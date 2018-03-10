@@ -1,15 +1,18 @@
 import os
+import redis
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_alembic import Alembic
 
 from cuckoo.utils.celery import Celery
+from cuckoo.utils.redis import Redis
 
 
 alembic = Alembic()
 celery = Celery()
 db = SQLAlchemy()
+redis = Redis()
 
 
 def create_app():
@@ -47,6 +50,7 @@ def create_app():
     configure_db(app)
 
     celery.init_app(app)
+    redis.init_app(app)
 
     configure_api(app)
 

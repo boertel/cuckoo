@@ -24,7 +24,7 @@ class ApplicationBoundMixin(object):
 
     @declared_attr
     def application(cls):
-        return db.relationship('Application', innerjoin=True, uselist=False)
+        return db.relationship('Application', uselist=False)
 
 
 class ApiTokenMixin(object):

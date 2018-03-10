@@ -1,54 +1,18 @@
-import json
 from marshmallow import Schema, fields, post_load
-from redbeat.decoder import RedBeatJSONDecoder, RedBeatJSONEncoder
 
 from cuckoo.models import Job
 
-
-class ScheduleSchema(Schema):
-    __type__ = fields.String(load_from='type', dump_to='type')
-
-
-class IntervalSchema(ScheduleSchema):
-    every = fields.Integer()
-    relative = fields.Boolean(default=False)
+from .rrule import RRuleSchema
+from .crontab import CrontabSchema
+from .interval import IntervalSchema
+from .fields import ScheduleField
 
 
-class CrontabSchema(ScheduleSchema):
-    minute = fields.String()
-    hour = fields.String()
-    day_of_week = fields.String()
-    day_of_month = fields.String()
-    month_of_year = fields.String()
-
-
-class DatetimeSchema(ScheduleSchema):
-    pass
-
-
-class RRuleSchema(ScheduleSchema):
-    pass
-
-
-SCHEMAS_MAPPING = {
+SCHEDULE_MAPPING = {
     'interval': IntervalSchema,
     'crontab': CrontabSchema,
+    'rrule': RRuleSchema,
 }
-
-
-class ScheduleField(fields.Nested):
-    def _serialize(self, value, attr, obj):
-        # value is a str
-        print('\n--------- _serialize', value, '\n')
-        response = json.loads(json.dumps(obj.schedule, cls=RedBeatJSONEncoder))
-        self.nested = SCHEMAS_MAPPING.get(response['__type__'])
-        return super()._serialize(response, attr, obj)
-
-    def _deserialize(self, value, attr, data):
-        # value is a dict
-        print('\n--------- _deserialize', value, '\n')
-        self.nested = SCHEMAS_MAPPING.get(value['type'])
-        return super()._deserialize(value, attr, data)
 
 
 class JobSchema(Schema):
@@ -56,7 +20,7 @@ class JobSchema(Schema):
     created_at = fields.DateTime(dump_only=True)
     name = fields.Str()
     url = fields.Url()
-    schedule = ScheduleField(IntervalSchema)
+    schedule = ScheduleField(schedule_mapping=SCHEDULE_MAPPING)
     enabled = fields.Bool()
 
     @post_load

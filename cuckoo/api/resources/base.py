@@ -48,10 +48,13 @@ class Resource(View):
             current_app.logger.exception('failed to handle api request')
             self.error('internal server error', 500)
 
+    def not_found(self, message='resource not found'):
+        return self.error(message, status=404)
+
     def error(self, message, status):
         return self.respond({'message': message}, status)
 
-    def respond(self, context, status=200):
+    def respond(self, context={}, status=200):
         resp = jsonify(context)
         resp.status_code = status
         return resp

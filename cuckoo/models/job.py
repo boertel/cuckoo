@@ -16,6 +16,9 @@ class Job(StandardAttributes, ApplicationBoundMixin, db.Model):
 
     __tablename__ = 'job'
 
+    def get_redis_key(self):
+        return 'redbeat:{}'.format(str(self.id))
+
 
 @event.listens_for(Job, 'after_insert')
 def create_task(mapper, connection, target):
@@ -46,7 +49,9 @@ def create_task(mapper, connection, target):
 
 @event.listens_for(Job, 'after_delete')
 def delete_task(mapper, connection, target):
-    pass
+    celery_app = celery.get_celery_app()
+    entry = RedBeatSchedulerEntry.from_key(target.get_redis_key(), celery_app)
+    entry.delete()
 
 
 @event.listens_for(Job, 'after_update')

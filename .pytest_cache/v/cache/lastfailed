@@ -1,0 +1,4 @@
+{
+  "tests/api/schemas/test_rrule.py::test_rrule_dict_to_schedule": true,
+  "tests/api/schemas/test_rrule.py::test_rrule_schedule_to_dict": true
+}

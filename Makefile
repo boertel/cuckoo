@@ -10,3 +10,6 @@ create-db:
 
 drop-db:
 	dropdb --if-exists cuckoo
+
+test:
+	py.test tests
