@@ -10,11 +10,11 @@ class RRuleByField(fields.String):
 
 class RRuleSchema(ScheduleSchema):
     freq = FreqField()
-    dtstart = TimestampField(format='timestamp')
+    dtstart = TimestampField(format='timestamp', allow_none=True, missing=None)
+    until = fields.DateTime(allow_none=True, missing=None)
     interval = fields.Integer()
     wkst = fields.String()
     count = fields.Integer()
-    until = fields.DateTime(allow_none=True)
     bysetpos = RRuleByField()
     bymonth = RRuleByField()
     bymonthday = RRuleByField()
