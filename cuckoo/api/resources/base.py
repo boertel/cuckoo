@@ -3,13 +3,13 @@ from flask.views import View
 
 from cuckoo import auth
 
-from ..authentication import ApiTokenAuthentication
+from ..authentication import ApiTokenAuthentication, SessionAuthentication
 
 
 class Resource(View):
     methods = ['GET', 'POST', 'PUT', 'DELETE']
 
-    authentication_classes = (ApiTokenAuthentication, )
+    authentication_classes = (ApiTokenAuthentication, SessionAuthentication, )
 
     auth_required = True
 
@@ -28,7 +28,7 @@ class Resource(View):
                     }, 401)
 
         if tenant:
-            auth.set_current_tenant(tenant)
+            pass
         elif self.auth_required:
             return self.respond({
                 'error': 'auth_required',

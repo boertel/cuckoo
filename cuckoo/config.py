@@ -1,5 +1,5 @@
 import os
-import redis
+from datetime import timedelta
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
@@ -9,6 +9,9 @@ from cuckoo.utils.celery import Celery
 from cuckoo.utils.redis import Redis
 
 
+ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
+
+
 alembic = Alembic()
 celery = Celery()
 db = SQLAlchemy()
@@ -16,7 +19,10 @@ redis = Redis()
 
 
 def create_app():
-    app = Flask(__name__)
+    app = Flask(
+        __name__,
+        template_folder=os.path.join(ROOT, 'templates'),
+    )
 
     SQLALCHEMY_URI = os.environ.get('SQLALCHEMY_URI')
     REDIS_URL = os.environ.get('REDIS_URL')
@@ -47,12 +53,19 @@ def create_app():
 
     app.config['REDBEAT_REDIS_URL'] = app.config['REDIS_URL']
 
+    app.config['GITHUB_CLIENT_ID'] = os.environ.get('GITHUB_CLIENT_ID')
+    app.config['GITHUB_CLIENT_SECRET'] = os.environ.get('GITHUB_CLIENT_SECRET')
+
+    app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+    app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)
+
     configure_db(app)
 
     celery.init_app(app)
     redis.init_app(app)
 
     configure_api(app)
+    configure_web(app)
 
     from . import models #NOQA
 
@@ -66,4 +79,9 @@ def configure_db(app):
 
 def configure_api(app):
     from cuckoo import api
-    app.register_blueprint(api.app, url_prefix='/api')
+    app.register_blueprint(api.app, url_prefix='/api/v1')
+
+
+def configure_web(app):
+    from cuckoo import web
+    app.register_blueprint(web.app, url_prefix='')
