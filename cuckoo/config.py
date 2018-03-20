@@ -18,7 +18,7 @@ db = SQLAlchemy()
 redis = Redis()
 
 
-def create_app():
+def create_app(**config):
     app = Flask(
         __name__,
         template_folder=os.path.join(ROOT, 'templates'),
@@ -58,6 +58,11 @@ def create_app():
 
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
     app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)
+
+    app.config.update(config)
+
+    from cuckoo.testutils.client import CuckooTestClient
+    app.test_client_class = CuckooTestClient
 
     configure_db(app)
 

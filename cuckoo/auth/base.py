@@ -4,7 +4,6 @@ from cuckoo.exceptions import AuthenticationFailed
 from cuckoo.models import User
 
 
-
 def login_user(uid):
     set_tenant_for_session(uid)
     g.current_user = User.query.get(uid)
@@ -17,6 +16,9 @@ def get_current_user():
         g.current_user = current_user
     return current_user
 
+
+def get_current_tenant():
+    return getattr(g, 'current_tenant', None)
 
 def set_current_tenant(tenant):
     g.current_tenant = tenant

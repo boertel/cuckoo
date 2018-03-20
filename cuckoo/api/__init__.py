@@ -10,4 +10,4 @@ app.add_resource('/apps/<app_id>', resources.ApplicationDetailResource)
 app.add_resource('/apps/<app_id>/jobs', resources.JobIndexResource)
 app.add_resource('/apps/<app_id>/jobs/<job_id>', resources.JobDetailsResource)
 
-app.add_resource('/user/<user_id>', resources.UserDetailResource)
+app.add_resource('/users/<user_id>', resources.UserDetailResource)

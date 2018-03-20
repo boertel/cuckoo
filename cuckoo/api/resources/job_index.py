@@ -1,14 +1,14 @@
 from cuckoo.config import db
 from cuckoo.models import Job
 
-from .base import Resource
+from .base_application import BaseApplicationResource
 from ..schemas import JobSchema
 
 job_schema = JobSchema()
 jobs_schema = JobSchema(many=True)
 
 
-class JobIndexResource(Resource):
+class JobIndexResource(BaseApplicationResource):
     def get(self, application):
         jobs = Job.query.filter_by(application=application)
         return self.respond_with_schema(jobs_schema, jobs)

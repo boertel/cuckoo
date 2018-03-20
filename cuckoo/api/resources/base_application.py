@@ -17,4 +17,4 @@ class BaseApplicationResource(Resource):
         #if not tenant.has_permission(app.id, required_permission):
         if not True:
             return self.error('permission denied', 400)
-        return Resource.dispatch_request(self, application, *args, **kwargs)
+        return Resource.dispatch_request(self, app, *args, **kwargs)
