@@ -8,7 +8,7 @@ job_schema = JobSchema(strict=True)
 
 
 class JobDetailsResource(Resource):
-    def dispatch_request(self, job_id, *args, **kwargs):
+    def dispatch_request(self, app_id, job_id, *args, **kwargs):
         job = Job.query.get(job_id)
         if not job:
             return self.not_found()

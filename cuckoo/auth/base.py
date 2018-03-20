@@ -1,6 +1,8 @@
 from flask import session, g
 
+from cuckoo.exceptions import AuthenticationFailed
 from cuckoo.models import User
+
 
 
 def login_user(uid):
@@ -9,7 +11,15 @@ def login_user(uid):
 
 
 def get_current_user():
-    return get_tenant_from_session()
+    current_user = getattr(g, 'current_user', None)
+    if not current_user:
+        current_user = get_user_from_request()
+        g.current_user = current_user
+    return current_user
+
+
+def set_current_tenant(tenant):
+    g.current_tenant = tenant
 
 
 def set_tenant_for_session(uid):
@@ -17,6 +27,8 @@ def set_tenant_for_session(uid):
     session.permanent = True
 
 
-def get_tenant_from_session():
-    uid = session['uid']
+def get_user_from_request():
+    uid = session.get('uid', None)
+    if not uid:
+        return None
     return User.query.get(uid)

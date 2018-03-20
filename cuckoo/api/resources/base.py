@@ -9,7 +9,7 @@ from ..authentication import ApiTokenAuthentication, SessionAuthentication
 class Resource(View):
     methods = ['GET', 'POST', 'PUT', 'DELETE']
 
-    authentication_classes = (ApiTokenAuthentication, SessionAuthentication, )
+    authentication_classes = (SessionAuthentication, )
 
     auth_required = True
 
@@ -28,7 +28,7 @@ class Resource(View):
                     }, 401)
 
         if tenant:
-            pass
+            auth.set_current_tenant(tenant)
         elif self.auth_required:
             return self.respond({
                 'error': 'auth_required',
@@ -66,4 +66,8 @@ class Resource(View):
         result = schema.dump(value)
         if result.errors:
             return self.error('invalid schema supplied')
+        return self.respond(result.data, status)
+
+    def respond_with_pagination(self, schema, value, status=200):
+        result = schema.dump(value)
         return self.respond(result.data, status)

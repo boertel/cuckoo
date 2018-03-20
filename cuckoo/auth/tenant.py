@@ -1,6 +1,8 @@
 from cached_property import cached_property
 from flask import g
 
+from cuckoo.models import Application, db
+
 
 class Tenant(object):
     def get_permission(self, application_id):
@@ -45,3 +47,4 @@ class UserTenant(Tenant):
     def access(self):
         if not self.user_id:
             return None
+        return db.session.query(Application.id).filter(Application.user_id == self.user_id)

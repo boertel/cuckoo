@@ -8,4 +8,7 @@ class ApiTokenAuthentication(object):
 
 class SessionAuthentication(object):
     def authenticate(self):
-        return auth.get_tenant_from_session()
+        user = auth.get_current_user()
+        if not user:
+            return None
+        return auth.Tenant.from_user(user)

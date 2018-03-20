@@ -6,11 +6,14 @@ from cuckoo.db.utils import model_repr
 
 class ApplicationApiToken(StandardAttributes, db.Model, ApiTokenMixin):
     application_id = db.Column(
-        GUID, db.ForeignKey('application.id', ondelete='CASCADE'), nullable=False, unique=True
+        GUID,
+        db.ForeignKey('application.id', ondelete='CASCADE'),
+        nullable=False, unique=True
     )
 
     application = db.relationship(
-        'Application', backref=db.backref('token', uselist=False), innerjoin=True
+        'Application',
+        backref=db.backref('token', uselist=False), innerjoin=True
     )
 
     __tablename__ = 'application_api_token'
