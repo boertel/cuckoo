@@ -1,15 +1,7 @@
 import json
+
 from marshmallow import fields
-from redbeat.decoder import RedBeatJSONDecoder, RedBeatJSONEncoder
-
-
-def to_dict(schedule):
-    return json.dumps(schedule, cls=RedBeatJSONEncoder)
-
-
-def to_schedule(data):
-    str_data = data
-    return json.loads(str_data, cls=RedBeatJSONDecoder)
+from cuckoo.utils.redbeat import from_schedule_to_dict, from_dict_to_schedule
 
 
 class ScheduleField(fields.Nested):
@@ -23,7 +15,7 @@ class ScheduleField(fields.Nested):
 
     def _serialize(self, value, attr, obj):
         # value is a obj
-        response = json.loads(to_dict(obj.schedule))
+        response = json.loads(from_schedule_to_dict(obj.schedule))
         self.nested = self.get_schema(response['__type__'])
         return super()._serialize(response, attr, obj)
 
@@ -31,4 +23,4 @@ class ScheduleField(fields.Nested):
         # value is a dict
         self.nested = self.get_schema(value['type'])
         response = super()._deserialize(value, attr, data)
-        return to_schedule(json.dumps(response))
+        return from_dict_to_schedule(json.dumps(response))
