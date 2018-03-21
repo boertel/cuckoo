@@ -1,7 +1,11 @@
+from flask_cors import CORS
+
 from .controller import Controller
 from . import resources
 
 app = Controller('api', __name__)
+
+CORS(app, origins='*')
 
 app.add_resource('/', resources.IndexResource)
 
