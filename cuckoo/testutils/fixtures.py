@@ -16,3 +16,11 @@ def default_login(client, default_user):
         session['uid'] = default_user.id
 
     yield default_user
+
+
+@pytest.fixture(scope='function')
+def default_application():
+    app = factories.ApplicationFactory(
+        name='Vandelay',
+    )
+    return app
