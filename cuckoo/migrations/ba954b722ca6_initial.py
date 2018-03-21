@@ -1,18 +1,17 @@
 """initial
 
-Revision ID: 346c37655759
-Revises: 
-Create Date: 2018-03-16 13:44:13.127385
+Revision ID: ba954b722ca6
+Revises:
+Create Date: 2018-03-21 09:15:04.954091
 
 """
+import cuckoo
 from alembic import op
 import sqlalchemy as sa
-import cuckoo
-import sqlalchemy_utils
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = '346c37655759'
+revision = 'ba954b722ca6'
 down_revision = None
 branch_labels = ('default',)
 depends_on = None
@@ -73,8 +72,8 @@ def upgrade():
     sa.Column('created_at', sa.DateTime(timezone=True), nullable=False),
     sa.Column('name', sa.String(length=200), nullable=False),
     sa.Column('url', sa.String(length=200), nullable=False),
-    sa.Column('params', sqlalchemy_utils.types.json.JSONType(), nullable=True),
-    sa.Column('schedule', cuckoo.db.types.schedule.Schedule(), nullable=True),
+    sa.Column('params', postgresql.JSON(astext_type=sa.Text()), nullable=True),
+    sa.Column('schedule', cuckoo.db.types.schedule.Schedule(astext_type=sa.Text()), nullable=True),
     sa.Column('enabled', sa.Boolean(), nullable=True),
     sa.Column('id', cuckoo.db.types.guid.GUID(), nullable=False),
     sa.Column('application_id', cuckoo.db.types.guid.GUID(), nullable=False),

@@ -1,6 +1,6 @@
 from redbeat import RedBeatSchedulerEntry
 from sqlalchemy import event
-from sqlalchemy_utils import JSONType
+from sqlalchemy.dialects.postgresql import JSON
 
 from cuckoo.config import db, celery
 from cuckoo.db.types import Schedule
@@ -10,7 +10,7 @@ from cuckoo.db.mixins import StandardAttributes, ApplicationBoundMixin
 class Job(StandardAttributes, ApplicationBoundMixin, db.Model):
     name = db.Column(db.String(200), nullable=False)
     url = db.Column(db.String(200), nullable=False)
-    params = db.Column(JSONType)
+    params = db.Column(JSON)
     schedule = db.Column(Schedule)
     enabled = db.Column(db.Boolean, default=False)
 

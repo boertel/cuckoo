@@ -1,19 +1,18 @@
-"""user_id
+"""application_user
 
-Revision ID: fb7a5a23c059
-Revises: 346c37655759
-Create Date: 2018-03-19 10:12:26.669763
+Revision ID: 7a287d6dd84d
+Revises: ba954b722ca6
+Create Date: 2018-03-21 09:22:33.535787
 
 """
+import cuckoo
 from alembic import op
 import sqlalchemy as sa
-import cuckoo
-import sqlalchemy_utils
 
 
 # revision identifiers, used by Alembic.
-revision = 'fb7a5a23c059'
-down_revision = '346c37655759'
+revision = '7a287d6dd84d'
+down_revision = 'ba954b722ca6'
 branch_labels = ()
 depends_on = None
 

@@ -5,10 +5,9 @@ Revises: ${down_revision | comma,n}
 Create Date: ${create_date}
 
 """
+import cuckoo
 from alembic import op
 import sqlalchemy as sa
-import cuckoo
-import sqlalchemy_utils
 ${imports if imports else ""}
 
 # revision identifiers, used by Alembic.

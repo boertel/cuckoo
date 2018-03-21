@@ -2,9 +2,9 @@ __all__ = ['Schedule']
 
 import json
 
-from sqlalchemy.types import TypeDecorator, Unicode
+from sqlalchemy.types import TypeDecorator
+from sqlalchemy.dialects.postgresql import JSON
 from redbeat.decoder import RedBeatJSONDecoder, RedBeatJSONEncoder
-from flask import current_app
 
 
 def to_dict(schedule):
@@ -17,18 +17,16 @@ def to_schedule(data):
 
 
 class Schedule(TypeDecorator):
-    impl = Unicode
+    impl = JSON
 
     def process_bind_param(self, value, dialect):
         # way in -> DB
-        #current_app.logger.info('process_bind_param', value)
         if value is not None:
             return str(to_dict(value))
-        return '{}'
+        return {}
 
     def process_result_value(self, value, dialect):
         # way out DB
-        #current_app.logger.info('process_result_value', value)
         if value:
             return to_schedule(value)
         return None
