@@ -6,10 +6,10 @@ from cuckoo.models import Application, db
 
 class Tenant(object):
     def get_permission(self, application_id):
-        pass
+        return application_id in self.access
 
     def has_permission(self, application_id):
-        pass
+        return self.get_permission(application_id) is not None
 
     def access(self):
         raise NotImplementedError
@@ -47,4 +47,4 @@ class UserTenant(Tenant):
     def access(self):
         if not self.user_id:
             return None
-        return db.session.query(Application.id).filter(Application.user_id == self.user_id)
+        return list(db.session.query(Application.id).filter(Application.user_id == self.user_id))
