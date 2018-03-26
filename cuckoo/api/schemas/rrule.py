@@ -1,6 +1,6 @@
 from marshmallow import fields
 
-from .fields import FreqField, TimestampField
+from .fields import FreqField, MayaField
 from .schedule import ScheduleSchema
 
 
@@ -10,7 +10,7 @@ class RRuleByField(fields.String):
 
 class RRuleSchema(ScheduleSchema):
     freq = FreqField()
-    dtstart = TimestampField(format='timestamp', allow_none=True, missing=None)
+    dtstart = MayaField(allow_none=True, missing=None)
     until = fields.DateTime(allow_none=True, missing=None)
     interval = fields.Integer()
     wkst = fields.String()

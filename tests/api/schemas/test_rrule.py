@@ -9,7 +9,8 @@ def test_rrule_schema_dump():
         '__type__': 'rrule',
         'freq': DAILY,
         'interval': 30,
-        'dtstart': int(datetime.utcnow().timestamp()),
+        # 'dtstart': datetime.utcnow(),
+        'dtstart': 1523664000,  # TODO(boertel) should be a datetime obj here?
     }
     schema = RRuleSchema()
     response = schema.dump(obj)
@@ -18,7 +19,8 @@ def test_rrule_schema_dump():
     assert data['type'] == 'rrule'
     assert data['freq'] == 'DAILY'
     assert data['interval'] == 30
-    assert isinstance(data['dtstart'], datetime)
+    assert isinstance(data['dtstart'], str)
+    assert data['dtstart'] == '2018-04-14T00:00:00Z'
 
 
 def test_rrule_schema_load():
@@ -26,7 +28,7 @@ def test_rrule_schema_load():
         'type': 'rrule',
         'freq': 'DAILY',
         'interval': 30,
-        'dtstart': 1451480362,
+        'dtstart': '2018-04-14T00:00:00',
     }
     schema = RRuleSchema()
     response = schema.load(data)
@@ -35,4 +37,4 @@ def test_rrule_schema_load():
     assert obj['__type__'] == 'rrule'
     assert obj['freq'] == DAILY
     assert isinstance(obj['dtstart'], int)
-    assert obj['dtstart'] == 1451480362
+    assert obj['dtstart'] == 1523664000

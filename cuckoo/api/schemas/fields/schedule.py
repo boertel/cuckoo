@@ -1,7 +1,15 @@
 import json
+import time
 
 from marshmallow import fields
 from cuckoo.utils.redbeat import from_schedule_to_dict, from_dict_to_schedule
+from datetime import date, datetime
+
+
+def json_serial(obj):
+    if isinstance(obj, (datetime, date)):
+        return time.mktime(obj.timetuple())
+    raise TypeError("Type %s not serializable" % type(obj))
 
 
 class ScheduleField(fields.Nested):
@@ -11,7 +19,10 @@ class ScheduleField(fields.Nested):
         super().__init__(nested, *args, **kwargs)
 
     def get_schema(self, value):
-        return self.schedule_mapping.get(value, self.nested)
+        schema = self.schedule_mapping.get(value, self.nested)
+        if self._Nested__schema != schema:
+            self._Nested__schema = None    # don't cache
+        return schema
 
     def _serialize(self, value, attr, obj):
         # value is a obj
@@ -23,4 +34,4 @@ class ScheduleField(fields.Nested):
         # value is a dict
         self.nested = self.get_schema(value['type'])
         response = super()._deserialize(value, attr, data)
-        return from_dict_to_schedule(json.dumps(response))
+        return from_dict_to_schedule(json.dumps(response, default=json_serial))

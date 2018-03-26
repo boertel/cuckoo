@@ -51,7 +51,7 @@ class Resource(View):
     def not_found(self, message='resource not found'):
         return self.error(message, status=404)
 
-    def error(self, message, status):
+    def error(self, message, status=403):
         return self.respond({'message': message}, status)
 
     def respond(self, context={}, status=200):

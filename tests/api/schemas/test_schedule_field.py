@@ -1,3 +1,4 @@
+import maya
 from datetime import datetime
 from dateutil.rrule import DAILY
 from celery.schedules import crontab
@@ -24,7 +25,7 @@ def test_schedule_field_rrule_serialize():
     assert data['type'] == 'rrule'
     assert data['freq'] == 'DAILY'
     assert data['interval'] == 30
-    assert data['dtstart'] == now
+    assert data['dtstart'] == maya.MayaDT.from_datetime(now).iso8601()
 
 
 def test_schedule_field_rrule_deserialize():
@@ -33,7 +34,7 @@ def test_schedule_field_rrule_deserialize():
         'type': 'rrule',
         'freq': 'DAILY',
         'interval': 30,
-        'dtstart': 1451480362,
+        'dtstart': '2018-04-14T00:00:00',
         'until': None,
     }
 
@@ -43,7 +44,7 @@ def test_schedule_field_rrule_deserialize():
     assert data.freq == DAILY
     assert data.interval == 30
     assert isinstance(data.dtstart, datetime)
-    assert data.dtstart.year == 2015
+    assert data.dtstart.year == 2018
 
 
 def test_schedule_field_crontab_serialize():

@@ -21,5 +21,4 @@ class JobIndexResource(BaseApplicationResource):
         job.application = application
         db.session.add(job)
         db.session.commit()
-
         return self.respond_with_schema(job_schema, job)
