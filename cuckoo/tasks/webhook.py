@@ -3,6 +3,7 @@ import requests
 from flask import current_app
 
 from cuckoo.config import celery
+from cuckoo.models import Application
 from cuckoo.version import get_version
 from cuckoo.webhook import make_digest
 
@@ -14,7 +15,12 @@ TIMEOUT = 30
 @celery.task()
 def webhook(job_id, application_id, url, data):
     current_app.logger.info('running webhook task')
-    signature = make_digest('{}'.format(data), 'my-key')
+    app = Application.query.filter(Application.id == application_id).first()
+    if not app:
+        current_app.logger.info('application {} not found'.format(application_id))
+        return
+
+    signature = make_digest('{}'.format(data), app.client_secret)
 
     headers = {
         'User-Agent': 'cuckoo {}'.format(get_version()),

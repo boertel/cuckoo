@@ -5,7 +5,7 @@ from . import resources
 
 app = Controller('api', __name__)
 
-CORS(app, origins='*')
+CORS(app, origins='http://localhost:3000', supports_credentials=True)
 
 app.add_resource('/', resources.IndexResource)
 

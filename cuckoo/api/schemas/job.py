@@ -22,6 +22,7 @@ class JobSchema(Schema):
     url = fields.Url()
     schedule = ScheduleField(schedule_mapping=SCHEDULE_MAPPING)
     enabled = fields.Bool()
+    application_id = fields.UUID(dump_only=True)
 
     @post_load
     def make_job(self, data):
